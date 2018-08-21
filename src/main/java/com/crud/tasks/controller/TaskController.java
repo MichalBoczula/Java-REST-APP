@@ -37,7 +37,7 @@ public class TaskController {
         return taskMapper.mapToTaskDto(dbService.saveTask(taskMapper.mapToTask(task)));
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "createOneTask")
+    @RequestMapping(method = RequestMethod.POST, value = "createTask")
     public void createTask(@RequestBody TaskDto task){
         dbService.saveTask(taskMapper.mapToTask(task));
     }
