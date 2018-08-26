@@ -36,12 +36,9 @@ public class TrelloClient {
     public List<TrelloBoardDto> getTrelloBoards() {
         final URI url = createURL();
         TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
+        final List<TrelloBoardDto> boardsList = Arrays.asList((boardsResponse));
 
-        List<TrelloBoardDto> boardsList = Arrays.asList((boardsResponse)).stream()
-                .filter(trelloBoardDto -> trelloBoardDto.getId() != null)
-                .filter(trelloBoardDto -> trelloBoardDto.getName().contains("Kodilla") == true)
-                .collect(Collectors.toList());
-        return Optional.ofNullable(boardsList).orElse(null);
+        return Optional.ofNullable(boardsList).orElse(Arrays.asList(new TrelloBoardDto[0]));
     }
 
     private URI createURL() {

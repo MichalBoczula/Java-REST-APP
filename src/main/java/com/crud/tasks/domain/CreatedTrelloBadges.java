@@ -18,6 +18,6 @@ public class CreatedTrelloBadges {
     @JsonProperty("name")
     private String name;
 
-    @JsonProperty
+    @JsonProperty("badges")
     private List<TrelloBadgesDto> badges;
 }
