@@ -31,12 +31,16 @@ public class TrelloClient {
     private TrelloConfig trelloConfig;
 
     public List<TrelloBoardDto> getTrelloBoards() {
-        final URI url = createURL();
-        TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
-        final List<TrelloBoardDto> boardsList = Arrays.asList((boardsResponse));
+        URI url = UriComponentsBuilder.fromHttpUrl(trelloConfig.getTrelloApiEndpoint()
+                + "/members" + trelloConfig.getTrelloClient() + "/boards")
+                .queryParam("key", trelloConfig.getTrelloAppKey())
+                .queryParam("token", trelloConfig.getTrelloToken())
+                .queryParam("fields", "name,id")
+                .queryParam("lists", "all").build().encode().toUri();
 
         try {
-            return Optional.ofNullable(boardsList).orElse(Arrays.asList(new TrelloBoardDto[0]));
+            TrelloBoardDto[] boardsResponse = restTemplate.getForObject(url, TrelloBoardDto[].class);
+            return Arrays.asList(Optional.ofNullable(boardsResponse).orElse(new TrelloBoardDto[0]));
         } catch (RestClientException e) {
             LOGGER.error(e.getMessage(), e);
             return new ArrayList<>();
