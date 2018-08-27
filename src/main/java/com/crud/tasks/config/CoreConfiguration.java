@@ -16,10 +16,12 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.List;
 
 @EnableScheduling
+@EnableSwagger2
 @Configuration
 public class CoreConfiguration implements WebMvcConfigurer {
 
@@ -40,7 +42,6 @@ public class CoreConfiguration implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Required by Swagger UI configuration
-
         registry.addResourceHandler("/lib/**").addResourceLocations("/lib/").setCachePeriod(0);
         registry.addResourceHandler("/images/**").addResourceLocations("/images/").setCachePeriod(0);
         registry.addResourceHandler("/css/**").addResourceLocations("/css/").setCachePeriod(0);
