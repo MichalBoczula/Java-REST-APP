@@ -1,14 +1,10 @@
 package com.crud.tasks.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
+@Data
 public class TrelloBadgesDto {
 
     private int votes;
-    private AttachmentByTypeDto attachmentByType;
+    private AttachmentByTypeDto attachmentsByType;
 }
