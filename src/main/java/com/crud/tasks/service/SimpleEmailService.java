@@ -19,13 +19,12 @@ public class SimpleEmailService {
 
     public void send(final Mail mail) {
         LOGGER.info("Starting email preparation...");
+
         try {
             javaMailSender.send(createMailMessage(mail));
             LOGGER.info("Email has been sent");
         } catch (MailException e) {
             LOGGER.error("Failed to process email sending: ", e.getMessage(), e);
-        } catch (NullPointerException n) {
-            LOGGER.error("Please set CC mail address", n.getMessage(), n);
         }
     }
 
@@ -34,7 +33,9 @@ public class SimpleEmailService {
         mailMessage.setTo(mail.getMailTo());
         mailMessage.setSubject(mail.getSubject());
         mailMessage.setText(mail.getMessage());
-        mailMessage.setCc(mail.getToCC());
+        if (mail.getToCC() != null && !mail.getToCC().trim().equals("")){
+            mailMessage.setCc(mail.getToCC());
+        }
         return mailMessage;
     }
 
