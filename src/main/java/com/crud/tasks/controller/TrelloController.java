@@ -27,21 +27,4 @@ public class TrelloController {
         return trelloFacade.createCard(trelloCardDto);
     }
 
-//    @Autowired
-//    private TrelloClient trelloClient;
-//
-//    @RequestMapping(method = RequestMethod.GET, value = "/getTrelloBoards")
-//    public List<TrelloBoardDto> getTrelloBoards() {
-//        final List<TrelloBoardDto> trelloBoards = trelloClient.getTrelloBoards().stream()
-//                .filter(trelloBoardDto -> trelloBoardDto.getId() != null)
-//                .filter(trelloBoardDto -> trelloBoardDto.getName().contains("Kodilla"))
-//                .collect(Collectors.toList());
-//
-//        return trelloBoards;
-//    }
-//
-//    @RequestMapping(method = RequestMethod.POST, value = "/createTrelloCard")
-//    public CreatedTrelloCardDto createNewCard(@RequestBody TrelloCardDto trelloCardDto) {
-//        return trelloClient.createNewCard(trelloCardDto);
-//    }
 }
