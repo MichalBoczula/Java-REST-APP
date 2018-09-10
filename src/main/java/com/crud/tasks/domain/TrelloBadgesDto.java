@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class TrelloBadgesDto {
-
     private int votes;
     private AttachmentByTypeDto attachmentsByType;
 }
