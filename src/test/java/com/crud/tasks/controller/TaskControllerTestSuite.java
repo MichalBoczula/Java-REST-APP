@@ -1,6 +1,9 @@
 package com.crud.tasks.controller;
 
+import com.crud.tasks.domain.Task;
 import com.crud.tasks.domain.TaskDto;
+import com.crud.tasks.mapper.TaskMapper;
+import com.crud.tasks.service.DbService;
 import com.google.gson.Gson;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,18 +29,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
 public class TaskControllerTestSuite {
-    @MockBean
-    private TaskController taskController;
     @Autowired
     private MockMvc mockMvc;
+    @MockBean
+    private TaskMapper taskMapper;
+    @MockBean
+    private DbService dbService;
 
     @Test
     public void getTasks() throws Exception {
         //given
-        final List<TaskDto> tasks = new ArrayList<>();
+        final List<Task> tasks = new ArrayList<>();
+        final List<TaskDto> tasksDto = new ArrayList<>();
+        tasks.add(new Task((long) 1, "test", "test"));
+        tasksDto.add(new TaskDto((long) 1, "test", "test"));
         //when
-        tasks.add(new TaskDto((long) 1, "test", "test"));
-        when(taskController.getTasks()).thenReturn(tasks);
+        when(dbService.getAllTasks()).thenReturn(tasks);
+        when(taskMapper.mapToTaskDtoList(tasks)).thenReturn(tasksDto);
         //then
         mockMvc.perform(get("/v1/task/getTasks").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200))
@@ -60,9 +68,11 @@ public class TaskControllerTestSuite {
     @Test
     public void getTask() throws Exception {
         //given
+        final Task task = new Task((long) 1, "test", "test");
         final TaskDto taskDto = new TaskDto((long) 1, "test", "test");
         //when
-        when(taskController.getTask((long) 1)).thenReturn(taskDto);
+        when(dbService.findTaskById((long) 1)).thenReturn(java.util.Optional.ofNullable(task));
+        when(taskMapper.mapToTaskDto(task)).thenReturn(taskDto);
         //then
         mockMvc.perform(get("/v1/task/getTask?taskId=1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -74,16 +84,23 @@ public class TaskControllerTestSuite {
     @Test
     public void getTaskWithNull() throws Exception {
         //given
+        final Task task = new Task((long) 1, "test", "test");
+        final TaskDto taskDto = null;
         //when
+        when(dbService.findTaskById((long) 1)).thenReturn(java.util.Optional.ofNullable(task));
+        when(taskMapper.mapToTaskDto(task)).thenReturn(taskDto);
         //then
         mockMvc.perform(get("/v1/task/getTask?taskId=1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is(200));
     }
 
+
     @Test
     public void deleteTask() throws Exception {
         //given
+        final Task task = new Task((long) 1, "test", "test");
         //when
+        when(dbService.findTaskById((long) 1)).thenReturn(java.util.Optional.ofNullable(task));
         //then
         mockMvc.perform(delete("/v1/task/deleteTask?taskId=1")
                 .contentType(MediaType.APPLICATION_JSON))
@@ -93,11 +110,14 @@ public class TaskControllerTestSuite {
     @Test
     public void updateTask() throws Exception {
         //given
+        final Task task = new Task(1L, "test", "test");
         final TaskDto taskDto = new TaskDto(1L, "test", "test");
         final Gson gson = new Gson();
         final String jsonContent = gson.toJson(taskDto);
         //when
-        when(taskController.updateTask(taskDto)).thenReturn(taskDto);
+        when(dbService.saveTask(task)).thenReturn(task);
+        when(taskMapper.mapToTask(taskDto)).thenReturn(task);
+        when(taskMapper.mapToTaskDto(task)).thenReturn(taskDto);
         //then
         mockMvc.perform(put("/v1/task/updateTask")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -109,10 +129,12 @@ public class TaskControllerTestSuite {
     public void createTask() throws Exception {
         //given
         final TaskDto taskDto = new TaskDto(1L, "test", "test");
+        final Task task = new Task(1L, "test", "test");
         final Gson gson = new Gson();
         final String jsonContent = gson.toJson(taskDto);
         //when
-        when(taskController.updateTask(taskDto)).thenReturn(taskDto);
+        when(taskMapper.mapToTask(taskDto)).thenReturn(task);
+        when(dbService.saveTask(task)).thenReturn(task);
         //then
         mockMvc.perform(post("/v1/task/createTask")
                 .contentType(MediaType.APPLICATION_JSON)
