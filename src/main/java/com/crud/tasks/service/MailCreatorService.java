@@ -40,4 +40,16 @@ public class MailCreatorService {
         context.setVariable("application_functionality", functionality);
         return templateEngine.process("mail/created-trello-card-mail", context);
     }
+
+    public String buildTemplateMail(String message){
+        Context context = new Context();
+        context.setVariable("preview", "Task ToDo");
+        context.setVariable("message", message);
+        context.setVariable("task_url", "http://localhost:8888/front19/");
+        context.setVariable("button", "Visit website");
+        context.setVariable("admin_config", adminConfig);
+        context.setVariable("goodbye_message", "Have a nice day");
+        context.setVariable("company_name", "Trello");
+        return templateEngine.process("mail/mail-template", context);
+    }
 }

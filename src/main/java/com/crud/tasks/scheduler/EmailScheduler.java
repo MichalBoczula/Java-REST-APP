@@ -18,17 +18,17 @@ public class EmailScheduler {
     @Autowired
     private AdminConfig adminConfig;
 
-//    @Scheduled(fixedDelay = 10000)
+    @Scheduled(fixedDelay = 10000)
     public void sendInformationEmail() {
         long size = taskRepository.count();
-        simpleEmailService.send(new Mail(
+        simpleEmailService.sendDailyMail(new Mail(
                 adminConfig.getAdminMail(),
                 SUBJECT,
                 "Currently in databases you got: " + size + " " + taskOrTasks(size)
         ));
     }
 
-    private String taskOrTasks(long size){
+    private String taskOrTasks(long size) {
         return size > 1 ? "tasks" : "task";
     }
 }
